@@ -59,15 +59,48 @@ async function getEventsByArtist(artist) {
   
   // use attraction ids to search to specific events
   response = await fetch(`${eventSearchUrl}&attractionId=${attractionIDs}`)
-  result = await response.json()
-  const events = result._embedded.events
+  result = await response.json();
+  //searching for certain artist throws a TypeError , whereas some will return successfully
+  try{
+    const events = result._embedded.events
+    console.log(events);
+    const eventsData = events.map( ({name, priceRanges, url, images, dates}) => {
+      return { name, priceRanges, url, images, date: dates.start.localDate}
+    })
+  
+    console.log(eventsData)
+    return eventsData
+  }catch(e){
+    if(e instanceof TypeError ){
+      console.log(e);
+    }
+  }
 
-  const eventsData = events.map( ({name, priceRanges, url, images, dates}) => {
-    return { name, priceRanges, url, images, date: dates.start.localDate}
-  })
 
-  console.log(eventsData)
-  return eventsData
 }
 
 // TODO: combine all of these into a single search function
+
+
+$(document).ready(function(){
+      $("#search").submit(function(e){
+        e.preventDefault();
+        let locationInput = $("#locationInput").val();
+        let dateInput = $("#dateInput").val();
+        let startAndEndDate = dateInput.split(" - ")
+        // console.log(startAndEndDate)
+        let keywordInput = $("#keywordInput").val();
+        // getEventsByArtist(keywordInput)
+        getEventsByLocation(locationInput)
+        // getEventsByDate(startAndEndDate[0], startAndEndDate[1]);
+        
+      })
+      $(function() {
+        $('input[name="daterange"]').daterangepicker({
+          opens: 'left'
+        }, function(start, end, label) {
+          return [start.format('YYYY-MM-DD'),end.format('YYYY-MM-DD')];
+        });
+      });
+
+})
