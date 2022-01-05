@@ -5,10 +5,11 @@ and narrowing our search by music events only
 const eventSearchUrl = 'https://app.ticketmaster.com/discovery/v2/events?classificationName=music&countryCode=US&apikey=M9MAwXQGG4GsWcLELZRygN0xaMztNO5y'
 const attractionSearchUrl = 'https://app.ticketmaster.com/discovery/v2/attractions?classificationName=music&countryCode=US&apikey=M9MAwXQGG4GsWcLELZRygN0xaMztNO5y'
 
-async function searchEvents(cityName, artist, startDate, endDate) {
+async function searchTicketmasterEvents(cityName, stateCode, artist, startDate, endDate) {
   let searchUrl = eventSearchUrl
-  // we will always require a location so append the value to the url
+  // we will always require a city and state so append the values to the url
   searchUrl += `&city=${encodeURIComponent(cityName)}`
+  searchUrl += `&stateCode=${stateCode}`
 
   // artist is optional so we only want to append to the url if the value exists
   if (artist) {
@@ -30,9 +31,9 @@ async function searchEvents(cityName, artist, startDate, endDate) {
   let eventSearchResponse = await (await fetch(searchUrl)).json()
 
   // only format the events when we get results from our search
-  if (eventSearchResponse.page.number > 0) {
-    formatEvents(eventSearchResponse._embedded.events)
-  } else {
+  if (eventSearchResponse.page.totalElements > 0) {
+    return formatEvents(eventSearchResponse._embedded.events)
+  } else { 
     // TODO: better handle searches with 0 responses
     console.log('no results found')
   }
@@ -51,12 +52,10 @@ function formatEvents(events) {
       price_max: priceRanges ? priceRanges[0].max.toString() : "N/A",
       url, 
       images, 
-      date: dates.start.localDate, 
-      //TODO: condence venue name and address
-      venue_name: _embedded.venues[0].name, 
-      venue_address_1: _embedded.venues[0].address.line1,
-      venue_city: _embedded.venues[0].city.name,
-      venue_state: _embedded.venues[0].state.stateCode,
+      date: dates.start.localDate,
+      time: dates.start.localTime,
+      venue: 
+        `${_embedded.venues[0].name}, ${_embedded.venues[0].city.name}, ${_embedded.venues[0].state.stateCode}`
     }
   })
 
