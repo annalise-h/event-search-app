@@ -6,6 +6,7 @@ async function start() {
   const response = await fetch(
     `https://api.seatgeek.com/2/events?performers[primary].slug=${urlifySearch2}&${key}`
   );
+
   const data = await response.json();
   let concertTitle = data.events.map((e, index) => {
     return data.events[index].title;
