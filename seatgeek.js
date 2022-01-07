@@ -6,12 +6,17 @@ async function seatgeekSearch(artistInput, state, city, dateStart, dateEnd) {
   //function limted to events of type "concert"
   const typeOfEvent = "concert";
   const urlifySearch = artistInput.replace(" ", "-");
+  //if any of the inputs from the form are blank, remove them from query. Artist is only required field.
+  let stateSearch = state == "" ? "" : `&venue.state=${state}`;
+  let citySearch = city == "" ? "" : `&venue.city=${city}`;
+  let startDateSearch =
+    dateStart == "" ? "" : `&datetime_local.gte=${dateStart}`;
+  let endDateSearch = dateEnd == "" ? "" : `&datetime_local.lte=${dateEnd}`;
   //returns list of 30 events
   const response = await fetch(
-    `https://api.seatgeek.com/2/events?per_page=30&performers[primary].slug=${urlifySearch}&taxonomies.name=${typeOfEvent}&venue.state=${state}&venue.city=${city}&datetime_local.gte=${dateStart}&datetime_local.lte=${dateEnd}&${key}`
+    `https://api.seatgeek.com/2/events?per_page=30&performers[primary].slug=${urlifySearch}&taxonomies.name=${typeOfEvent}&${stateSearch}${citySearch}${startDateSearch}${endDateSearch}&${key}`
   );
   const data = await response.json();
-  console.log(data);
   let events = data.events;
   // get output for requested information
   let output = events.map(
