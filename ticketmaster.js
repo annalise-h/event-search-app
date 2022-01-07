@@ -2,7 +2,7 @@
 whenever we call the api, we are always searching within the US
 and narrowing our search by music events only
 */
-const eventSearchUrl = 'https://app.ticketmaster.com/discovery/v2/events?classificationName=music&countryCode=US&apikey=M9MAwXQGG4GsWcLELZRygN0xaMztNO5y'
+const eventSearchUrl = 'https://app.ticketmaster.com/discovery/v2/events?classificationName=music&countryCode=US&sort=name,asc&apikey=M9MAwXQGG4GsWcLELZRygN0xaMztNO5y'
 const attractionSearchUrl = 'https://app.ticketmaster.com/discovery/v2/attractions?classificationName=music&countryCode=US&apikey=M9MAwXQGG4GsWcLELZRygN0xaMztNO5y'
 
 async function searchTicketmasterEvents(cityName, stateCode, artist, startDate, endDate) {
@@ -35,7 +35,7 @@ async function searchTicketmasterEvents(cityName, stateCode, artist, startDate, 
     return formatEvents(eventSearchResponse._embedded.events)
   } else { 
     // TODO: better handle searches with 0 responses
-    console.log('no results found')
+    return []
   }
 }
 
@@ -46,12 +46,12 @@ images, local date, venue name, venue location
 function formatEvents(events) {
   const formattedEventData = events.map( ({name, priceRanges, url, images, dates, _embedded}) => {
     return { 
-      name, 
+      title: name, 
       // some events don't have a price range, so then we return a default value
       price_min: priceRanges ? priceRanges[0].min.toString() : "N/A",
       price_max: priceRanges ? priceRanges[0].max.toString() : "N/A",
       url, 
-      images, 
+      image: images[0],
       date: dates.start.localDate,
       time: dates.start.localTime,
       venue: 
