@@ -24,11 +24,24 @@
       type="text/javascript"
       src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
     ></script>
-    
-<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
+    />
     <title>Document</title>
     <script src="seatgeek.js"></script>
     <script src="ticketmaster.js"></script>
@@ -63,7 +76,7 @@
         </div>
       </div>
     </nav>
-​
+    ​
     <h1 class="text-center mt-4">Look for events</h1>
     <div class="container">
       <div class="row justify-content-center mt-4">
@@ -80,13 +93,17 @@
                 placeholder="City"
                 required
               />
-              <div class="invalid-feedback">
-                Please enter a city
-              </div>
+              <div class="invalid-feedback">Please enter a city</div>
             </div>
             <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-              <select id="stateInput" class="form-control" aria-placeholder="State" required>
-                <option value="" disabled selected value="">Select your option</option>
+              <select
+                id="stateInput"
+                class="form-control"
+                aria-placeholder="State"
+              >
+                <option value="" disabled selected value="">
+                  Select your option
+                </option>
 
                 <option value="AL">Alabama</option>
                 <option value="AK">Alaska</option>
@@ -140,15 +157,18 @@
                 <option value="WI">Wisconsin</option>
                 <option value="WY">Wyoming</option>
               </select>
-              <div class="invalid-feedback">
-                Please select state
-              </div>
+              <div class="invalid-feedback">Please select state</div>
             </div>
             <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-              <input class="form-control" type="text" name="datefilter" value="" id="dateInput" placeholder="Date" required/>
-              <div class="invalid-feedback">
-                Please enter a date
-              </div>
+              <input
+                class="form-control"
+                type="text"
+                name="datefilter"
+                value=""
+                id="dateInput"
+                placeholder="Date"
+              />
+              <div class="invalid-feedback">Please enter a date</div>
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
               <input
@@ -156,11 +176,8 @@
                 class="form-control"
                 id="keywordInput"
                 placeholder="Search for artist, venues, events"
-                required
               />
-              <div class="invalid-feedback">
-                Please enter an artist
-              </div>
+              <div class="invalid-feedback">Please enter an artist</div>
             </div>
             <div class="col-12">
               <button type="submit" class="btn btn-primary">Search</button>
@@ -174,20 +191,31 @@
   <script>
     let results = [];
     let searchButton = document.querySelector(".btn");
-    let search = document.getElementById("search")
-    $("#search").submit(function(e){
+    let search = document.getElementById("search");
+    $("#search").submit(function (e) {
       e.preventDefault();
       let city = document.getElementById("cityInput").value;
       let state = document.getElementById("stateInput").value;
       let keyInput = document.getElementById("keywordInput").value;
       let dateInput = document.getElementById("dateInput").value;
-      let startAndEndDate = dateInput.split(" - ");
-      console.log(startAndEndDate)
-      let startDate = startAndEndDate[0].replace(new RegExp('/', 'g'),"-");
-      let endDate = startAndEndDate[1].replace(new RegExp('/', 'g'),"-")
+      if (dateInput.length == 0) {
+        startDate = "";
+        endDate = "";
+      } else {
+        let startAndEndDate = dateInput.split(" - ");
+        let startDate = startAndEndDate[0].replace(new RegExp("/", "g"), "-");
+        console.log(startDate);
+        let endDate = startAndEndDate[1].replace(new RegExp("/", "g"), "-");
+      }
 
       async function test() {
-        const artist = await seatgeekSearch(keyInput, state, city, startDate, endDate);
+        const artist = await seatgeekSearch(
+          keyInput,
+          state,
+          city,
+          startDate,
+          endDate
+        );
         console.log(artist);
         loadTable(artist);
         loadArtist(artist);
@@ -195,8 +223,8 @@
       }
       test();
       function loadTable(artist) {
-        if(artist.length>0){
-         $("#output").html(`<div class="row h-500px w-500px"">
+        if (artist.length > 0) {
+          $("#output").html(`<div class="row h-500px w-500px"">
                   <img
                     alt=""
                   />
@@ -210,19 +238,16 @@
                     </thead>
                     <tbody id="tableOutput"></tbody>
                 </table>
-                </div>`
-         )
-        }else{
+                </div>`);
+        } else {
           $("#output").html(`
           <div row justify-content-center mt-4>
             <div col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6  align='center'>
               <h4>No concerts</h4>
             </div>
           </div>
-          `)
-
+          `);
         }
-       
       }
       function loadArtist(artist) {
         let dateConvert = new Date("2022-05-06T19:30:00").toString();
@@ -233,14 +258,14 @@
           let dateCell = newRow.insertCell(0);
           let venueCell = newRow.insertCell(1);
           let urlCell = newRow.insertCell(2);
-          dateCell.innerHTML = `${new Date(event.dates).toString()}`;
+          dateCell.innerHTML = `${event.date} ${event.time}`;
           venueCell.innerHTML = `${event.venue}`;
           urlCell.innerHTML = `
                             <a
                               class="btn btn-danger"
                               href="${event.url}"
                             >
-                              Seatgeek from $${event.price_low}
+                              Seatgeek from $${event.price_min}
                             </a>`;
         });
         return artistArray.join("");
@@ -248,45 +273,56 @@
     });
 
     //bootstrap validation
-    
-      (function () {
-      'use strict'
+
+    (function () {
+      "use strict";
 
       // Fetch all the forms we want to apply custom Bootstrap validation styles to
-      var forms = document.querySelectorAll('.needs-validation')
+      var forms = document.querySelectorAll(".needs-validation");
 
       // Loop over them and prevent submission
-      Array.prototype.slice.call(forms)
-        .forEach(function (form) {
-          form.addEventListener('submit', function (event) {
+      Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener(
+          "submit",
+          function (event) {
             if (!form.checkValidity()) {
-              event.preventDefault()
-              event.stopPropagation()
+              event.preventDefault();
+              event.stopPropagation();
             }
 
-            form.classList.add('was-validated')
-          }, false)
-        })
-    })()
+            form.classList.add("was-validated");
+          },
+          false
+        );
+      });
+    })();
 
     //date picker
-    $(function() {
-
-    $('input[name="datefilter"]').daterangepicker({
+    $(function () {
+      $('input[name="datefilter"]').daterangepicker({
         autoUpdateInput: false,
         locale: {
-            cancelLabel: 'Clear'
+          cancelLabel: "Clear",
+        },
+      });
+
+      $('input[name="datefilter"]').on(
+        "apply.daterangepicker",
+        function (ev, picker) {
+          $(this).val(
+            picker.startDate.format("MM/DD/YYYY") +
+              " - " +
+              picker.endDate.format("MM/DD/YYYY")
+          );
         }
-    });
+      );
 
-    $('input[name="datefilter"]').on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-    });
-
-    $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
-        $(this).val('');
-    });
-
+      $('input[name="datefilter"]').on(
+        "cancel.daterangepicker",
+        function (ev, picker) {
+          $(this).val("");
+        }
+      );
     });
   </script>
 </html>
