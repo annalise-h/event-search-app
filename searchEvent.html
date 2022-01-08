@@ -30,7 +30,6 @@
       src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
     ></script>
     <script
-      type="text/javascript"
       src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
     ></script>
     <script
@@ -250,7 +249,6 @@
         }
       }
       function loadArtist(artist) {
-        let dateConvert = new Date("2022-05-06T19:30:00").toString();
         let tableRef = document.getElementById("tableOutput");
         console.log(artist.length);
         artistArray = artist.map(function (event) {
@@ -258,7 +256,10 @@
           let dateCell = newRow.insertCell(0);
           let venueCell = newRow.insertCell(1);
           let urlCell = newRow.insertCell(2);
-          dateCell.innerHTML = `${event.date} ${event.time}`;
+
+          let combinedDateTime = `${event.date}T${event.time}`
+          let formattedDateTime = moment(combinedDateTime).format('dddd MMMM Do YYYY, h:mma')
+          dateCell.innerHTML = formattedDateTime;
           venueCell.innerHTML = `${event.venue}`;
           urlCell.innerHTML = `
                             <a
@@ -324,5 +325,7 @@
         }
       );
     });
+
+
   </script>
 </html>
