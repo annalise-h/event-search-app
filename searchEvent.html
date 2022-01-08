@@ -9,17 +9,12 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-      crossorigin="anonymous"
-    ></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="styles.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+<<<<<<< Updated upstream
     <script
       type="text/javascript"
       src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
@@ -36,14 +31,25 @@
       type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
     ></script>
+=======
+>>>>>>> Stashed changes
     <link
       rel="stylesheet"
       type="text/css"
       href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
     />
+    <link
+      rel="stylesheet"
+      href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css"
+    />
+    <script src="//code.jquery.com/jquery.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
     <title>Document</title>
-    <script src="seatgeek.js"></script>
-    <script src="ticketmaster.js"></script>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -186,6 +192,107 @@
       </div>
     </div>
     <div class="container" id="output"></div>
+    <script src="seatgeek.js"></script>
+    <script src="ticketmaster.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"
+    ></script>
+    <table
+      data-toggle="table"
+      data-classes="table table-hover table-condensed"
+      data-striped="true"
+      data-sort-name="Quality"
+      data-sort-order="desc"
+    >
+      <thead>
+        <tr>
+          <th class="col-xs-1" data-field="Product_Name" data-sortable="true">
+            Product Name
+          </th>
+          <th class="col-xs-1" data-field="Quality" data-sortable="true">
+            Quality
+          </th>
+          <th class="col-xs-6" data-field="Quantity">Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Wheat</td>
+          <td>Good</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Rice</td>
+          <td>Good</td>
+          <td>100 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Rice</td>
+          <td>Good</td>
+          <td>100 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Maze</td>
+          <td>Fine</td>
+          <td>10 Packs</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+      </tbody>
+    </table>
   </body>
   <script>
     let results = [];
@@ -198,27 +305,23 @@
       let keyInput = document.getElementById("keywordInput").value;
       let dateInput = document.getElementById("dateInput").value;
       if (dateInput.length == 0) {
-        startDate = "";
-        endDate = "";
+        dateStart = "";
+        dateEnd = "";
       } else {
-        let startAndEndDate = dateInput.split(" - ");
-        let startDate = startAndEndDate[0].replace(new RegExp("/", "g"), "-");
-        console.log(startDate);
-        let endDate = startAndEndDate[1].replace(new RegExp("/", "g"), "-");
+        startAndEndDate = dateInput.split(" - ");
+        dateStart = startAndEndDate[0].replace(new RegExp("/", "g"), "-");
+        dateEnd = startAndEndDate[1].replace(new RegExp("/", "g"), "-");
       }
-
       async function test() {
         const artist = await seatgeekSearch(
           keyInput,
           state,
           city,
-          startDate,
-          endDate
+          dateStart,
+          dateEnd
         );
-        console.log(artist);
         loadTable(artist);
         loadArtist(artist);
-        // document.getElementById("output").innerHTML = artistArray;
       }
       test();
       function loadTable(artist) {
@@ -228,15 +331,98 @@
                     alt=""
                   />
                 </div>
+                <div><table
+      data-toggle="table"
+      data-classes="table table-hover table-condensed"
+      data-striped="true"
+      data-sort-name="Quality"
+      data-sort-order="desc"
+    >
+      <thead>
+        <tr>
+          <th class="col-xs-1" data-field="Product_Name" data-sortable="true">
+            Product Name
+          </th>
+          <th class="col-xs-1" data-field="Quality" data-sortable="true">
+            Quality
+          </th>
+          <th class="col-xs-6" data-field="Quantity">Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Wheat</td>
+          <td>Good</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Rice</td>
+          <td>Good</td>
+          <td>100 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Rice</td>
+          <td>Good</td>
+          <td>100 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Maze</td>
+          <td>Fine</td>
+          <td>10 Packs</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+        <tr id="tr-id-2" class="tr-class-2">
+          <td>Sugar</td>
+          <td>Prime</td>
+          <td>200 Bags</td>
+        </tr>
+      </tbody>
+    </table></div>
                 <div class="row">
-                  <table class="table table-striped table-hover" style="text-align:center; vertical-align:middle">
+                  
+                  <table data-toggle="table" 
+       data-classes="table table-hover table-condensed"
+       data-striped="true"
+       data-sort-name="venue"
+       data-sort-order="desc"
+       >
                     <thead>
-                      <th scope="col">Date</th>
-                      <th scope="col">Venue</th>
-                      <th scope="col">Tickets</th>
+                      <th data-sortable="true"data-field="date" id="tableDate" scope="col">Date</th>
+                      <th data-sortable="true" data-field="venue" id="tableVenue" scope="col">Venue</th>
+                      <th id="tableTix" scope="col">Tickets</th>
                     </thead>
                     <tbody id="tableOutput"></tbody>
                 </table>
+                
                 </div>`);
         } else {
           $("#output").html(`
@@ -250,9 +436,10 @@
       }
       function loadArtist(artist) {
         let tableRef = document.getElementById("tableOutput");
-        console.log(artist.length);
         artistArray = artist.map(function (event) {
           let newRow = tableRef.insertRow();
+          newRow.classList = "tr-class-2";
+          newRow.id = "tr-id-2";
           let dateCell = newRow.insertCell(0);
           let venueCell = newRow.insertCell(1);
           let urlCell = newRow.insertCell(2);
