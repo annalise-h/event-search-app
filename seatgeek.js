@@ -17,7 +17,6 @@ async function seatgeekSearch(artistInput, state, city, dateStart, dateEnd) {
     `https://api.seatgeek.com/2/events?per_page=30&performers[primary].slug=${urlifySearch}&taxonomies.name=${typeOfEvent}&${stateSearch}${citySearch}${startDateSearch}${endDateSearch}&${key}`
   );
   const data = await response.json();
-  console.log(data);
   let events = data.events;
   // get output for requested information
   let output = events.map(
@@ -39,7 +38,20 @@ async function seatgeekSearch(artistInput, state, city, dateStart, dateEnd) {
       };
     }
   );
+  let output2 = [...output];
   //sort return based on title of event (a-z)
-  let sortedEvents = output.sort((a, b) => (a.title > b.title ? 1 : -1));
-  return sortedEvents;
+
+  let sortedVenueDec = output2.sort((a, b) => (a.venue > b.venue ? -1 : 1));
+  let sortedVenueAsc = output2.sort((a, b) => (a.venue > b.venue ? 1 : -1));
+  let sortedEventsDec = output2.sort((a, b) => (a.title > b.title ? -1 : 1));
+  let sortedEventsAsc = output2.sort((a, b) => (a.title > b.title ? 1 : -1));
+  let sortedDateDec = output2.sort((a, b) => (a.date > b.date ? -1 : 1));
+  let sortedDatesAsc = output2.sort((a, b) => (a.date > b.date ? 1 : -1));
+  let sortedPriceDec = output2.sort((a, b) =>
+    a.price_min > b.price_min ? -1 : 1
+  );
+  let sortedPriceAsc = output2.sort((a, b) =>
+    a.price_min > b.price_min ? 1 : -1
+  );
+  return sortedEventsAsc;
 }
