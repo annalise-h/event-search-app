@@ -2,14 +2,17 @@
 whenever we call the api, we are always searching within the US
 and narrowing our search by music events only
 */
-const eventSearchUrl = 'https://app.ticketmaster.com/discovery/v2/events?classificationName=music&countryCode=US&sort=name,asc&apikey=M9MAwXQGG4GsWcLELZRygN0xaMztNO5y'
-const attractionSearchUrl = 'https://app.ticketmaster.com/discovery/v2/attractions?classificationName=music&countryCode=US&apikey=M9MAwXQGG4GsWcLELZRygN0xaMztNO5y'
+apiKey="nWu4c2uaSG2JYUTkGTzuHTAwSuZR1GDX"
+const eventSearchUrl = `https://app.ticketmaster.com/discovery/v2/events?classificationName=music&countryCode=US&sort=name,asc&apikey=${apiKey}`
+const attractionSearchUrl = `https://app.ticketmaster.com/discovery/v2/attractions?classificationName=music&countryCode=US&apikey=${apiKey}`
 
 async function searchTicketmasterEvents(cityName, stateCode, artist, startDate, endDate) {
   let searchUrl = eventSearchUrl
   // we will always require a city and state so append the values to the url
   searchUrl += `&city=${encodeURIComponent(cityName)}`
-  searchUrl += `&stateCode=${stateCode}`
+
+    //the select statement returns null if no value is entered, so a check for null is needed
+  searchUrl += stateCode == null ? "" : `&stateCode=${stateCode}`
 
   // artist is optional so we only want to append to the url if the value exists
   if (artist) {
@@ -23,9 +26,8 @@ async function searchTicketmasterEvents(cityName, stateCode, artist, startDate, 
     // if one of these is null, we want to use * to search by all dates before or after
     !startDate ? startDate = '*' : startDate += 'T00:00:00'
     !endDate ? endDate = '*' : endDate += 'T00:00:00'
-    searchUrl += `&localStartEndDateTime=${startDate},${endDate}`
   }
-
+  // searchUrl += `&localStartEndDateTime=${startDate},${endDate}`
   // TODO: add alphabet sort to search url
   // maybe add sort type as a parameter so we can use this on the discover page
   let eventSearchResponse = await (await fetch(searchUrl)).json()

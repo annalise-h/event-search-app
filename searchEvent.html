@@ -41,48 +41,25 @@
       type="text/css"
       href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
     />
-    <title>Document</title>
+    <title>TicketGeek</title>
     <script src="seatgeek.js"></script>
     <script src="ticketmaster.js"></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <i class="fa fa-ticket"></i>
-          Concert
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="index.html">
-                <i class="fa fa-home"></i>
-                Home
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
+    <nav class="navbar navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+        &nbsp;
+        <img src="http://cdn.onlinewebfonts.com/svg/img_432058.png" width="25" height="25" class="d-inline-block align-top" alt="">
+        &nbsp;
+        <span>TicketGeek</span>
+      </a>
     </nav>
     ​
-    <h1 class="text-center mt-4">Look for events</h1>
+    <h1 class="text-center mt-4">Welcome to TicketGeek</h1>
+    <p class="text-center mt-2">Find the best pricing for live concert events</p>
     <div class="container">
       <div class="row justify-content-center mt-4">
-        <div
-          class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"
-          align="center"
-        >
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" align="center">
           <form id="search" class="row g-3 needs-validation" novalidate>
             <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
               <input
@@ -90,20 +67,15 @@
                 class="form-control"
                 id="cityInput"
                 placeholder="City"
-                required
               />
               <div class="invalid-feedback">Please enter a city</div>
             </div>
             <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
               <select
-                id="stateInput"
-                class="form-control"
-                aria-placeholder="State"
-              >
-                <option value="" disabled selected value="">
-                  Select your option
+                id="stateInput" class="form-control" aria-placeholder="State">
+                <option disabled selected >
+                  State
                 </option>
-
                 <option value="AL">Alabama</option>
                 <option value="AK">Alaska</option>
                 <option value="AZ">Arizona</option>
@@ -156,123 +128,240 @@
                 <option value="WI">Wisconsin</option>
                 <option value="WY">Wyoming</option>
               </select>
-              <div class="invalid-feedback">Please select state</div>
+              <div class="invalid-feedback">Please select a state</div>
             </div>
             <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
               <input
                 class="form-control"
                 type="text"
                 name="datefilter"
-                value=""
                 id="dateInput"
                 placeholder="Date"
               />
               <div class="invalid-feedback">Please enter a date</div>
             </div>
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-              <input
-                type="text"
-                class="form-control"
-                id="keywordInput"
-                placeholder="Search for artist, venues, events"
-              />
-              <div class="invalid-feedback">Please enter an artist</div>
+              <div class="input-group mb-3">
+                <input required type="text" class="form-control"  id="keywordInput" placeholder="Search artist..." aria-label="Search artist..." aria-describedby="basic-addon2" >
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary" type="submit"><i class="fa fa-search fa-2x"></i></button>
+                </div>
+              </div>
+
             </div>
-            <div class="col-12">
-              <button type="submit" class="btn btn-primary">Search</button>
-            </div>
+
           </form>
+
         </div>
       </div>
+        <div class="row justify-content-end" id="filters">
+          <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+                <button class="btn btn-light btn-md filter" id="ticketmaster"><i class="fa fa-filter"></i> TicketMaster</button>
+            <button class="btn btn-light  btn-md filter" id="seatgeek"><i class="fa fa-filter"></i> SeatGeek</button>
+          </div>
+        </div>
     </div>
-    <div class="container" id="output"></div>
+
+    <div class="container">
+      <div id="searchInfo"></div>
+    </div>
+    <div class="row justify-content-center mt-4" id="output">
+    </div>
   </body>
   <script>
     let results = [];
     let searchButton = document.querySelector(".btn");
     let search = document.getElementById("search");
+
+    //submit event for search form
+    const filters = $("#filters");
+    filters.hide();
     $("#search").submit(function (e) {
       e.preventDefault();
-      let city = document.getElementById("cityInput").value;
-      let state = document.getElementById("stateInput").value;
-      let keyInput = document.getElementById("keywordInput").value;
-      let dateInput = document.getElementById("dateInput").value;
+      const output = $("#output");
+      const searchInfo = $("#searchInfo");
+
+      output.empty();
+      //input values 
+      let city = $("#cityInput").val();
+      let state = $("#stateInput").val();
+      let keyInput = $("#keywordInput").val();
+      let dateInput = $("#dateInput").val();
+      let startAndEndDate = dateInput.split(" - ");
+      let startDateForSeatGeek;
+      let endDateForSeatGeek;
+      let startDateForTicketMaster;
+      let endDateForTicketMaster;
+      //date format for ticketmaster start and end dates
+
+
       if (dateInput.length == 0) {
-        startDate = "";
-        endDate = "";
+        startDateForSeatGeek = "";
+        endDateForSeatGeek = "";
       } else {
-        let startAndEndDate = dateInput.split(" - ");
-        let startDate = startAndEndDate[0].replace(new RegExp("/", "g"), "-");
-        console.log(startDate);
-        let endDate = startAndEndDate[1].replace(new RegExp("/", "g"), "-");
+        startDateForSeatGeek = startAndEndDate[0].replace(new RegExp("/", "g"), "-");
+        endDateForSeatGeek = startAndEndDate[1].replace(new RegExp("/", "g"), "-");
+        startDateForTicketMaster = new Date(startAndEndDate[0]).toISOString().split('T')[0];
+        endDateForTicketMaster = new Date(startAndEndDate[1]).toISOString().split('T')[0];
       }
 
+
       async function test() {
-        const artist = await seatgeekSearch(
+        //call the seat geek API and return the search results
+        const seatGeekArtist = await seatgeekSearch(
           keyInput,
           state,
           city,
-          startDate,
-          endDate
+          startDateForSeatGeek,
+          endDateForSeatGeek
         );
-        console.log(artist);
-        loadTable(artist);
-        loadArtist(artist);
+        //call the ticket master API and return the search results
+
+        const ticketMasterArtist = await searchTicketmasterEvents(
+          city,
+          state,
+          keyInput,
+          startDateForTicketMaster,
+          endDateForTicketMaster
+        );
+
+        //create the cards for seat geek and ticket master artist events
+        loadSeatGeekEventCard(seatGeekArtist);
+        loadTicketMasterEventCard(ticketMasterArtist);
+        noSearchesFound(ticketMasterArtist, seatGeekArtist,keyInput);
+        numberOfSearchesFound(ticketMasterArtist,seatGeekArtist);
+        if(seatGeekArtist.length === 0 && ticketMasterArtist.length === 0){
+          filters.hide();
+        }else{
+          filters.show();
+        }
         // document.getElementById("output").innerHTML = artistArray;
       }
       test();
-      function loadTable(artist) {
-        if (artist.length > 0) {
-          $("#output").html(`<div class="row h-500px w-500px"">
-                  <img
-                    alt=""
-                  />
+ 
+      //function for creating seat geek event cards
+      function loadSeatGeekEventCard(artist){
+      artist.map(function(event){
+        let combinedDateTime = `${event.date}T${event.time}`
+        let formattedDateTime = moment(combinedDateTime).format('dddd MMMM Do YYYY, h:mma')
+        output.append(
+        `
+                  <div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 seatgeek" align="center">
+                    <div class="card mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="${event.image}" width="100%" height="280px" alt="...">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <h5 class="card-title">${event.title.toUpperCase()}</h5>
+                                    <p class="card-text"><i class='fa fa-map-marker'></i>  ${event.venue}</p>
+                                    <p class="card-text"><i class='fa fa-calendar'></i> ${formattedDateTime}</p>
+                                    <p class="card-text">From SeatGeek</p>
+
+                                    <a class="btn btn-primary" href="${event.url}">${priceAvailablity(event.price_min)}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="row">
-                  <table class="table table-striped table-hover" style="text-align:center; vertical-align:middle">
-                    <thead>
-                      <th scope="col">Date</th>
-                      <th scope="col">Venue</th>
-                      <th scope="col">Tickets</th>
-                    </thead>
-                    <tbody id="tableOutput"></tbody>
-                </table>
-                </div>`);
-        } else {
-          $("#output").html(`
-          <div row justify-content-center mt-4>
-            <div col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6  align='center'>
-              <h4>No concerts</h4>
-            </div>
+                  
+        `
+      )
+      })
+      
+    }
+    //function for creating ticket master event cards
+
+    function loadTicketMasterEventCard(artist){
+      artist.map(function(event){
+        let combinedDateTime = `${event.date}T${event.time}`
+        let formattedDateTime = moment(combinedDateTime).format('dddd MMMM Do YYYY, h:mma')
+        output.append(
+        `
+                  <div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 ticketmaster" align="center">
+                    <div class="card mb-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="${event.image.url}" width="100%" height="280px" alt="...">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <h5 class="card-title">${event.title.toUpperCase()}</h5>
+                                    <p class="card-text"><i class='fa fa-map-marker'></i>  ${event.venue}</p>
+                                    <p class="card-text"><i class='fa fa-calendar'></i> ${formattedDateTime}</p>
+                                    <p class="card-text">From TicketMaster</p>
+                                    <a class="btn btn-primary" href="${event.url}">${priceAvailablity(event.price_min)}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                  
+        `
+      )
+      })
+      
+    }
+
+    //function to check and show that both apis returned empty results 
+    function noSearchesFound(ticketMasterArtist, seatGeekArtist,artist){
+      if(ticketMasterArtist.length === 0 ||   seatGeekArtist === 0){
+        output.empty();
+        searchInfo.empty();
+        output.append(
+        `
+                  <div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
+                    <div class="card mb-3">
+                        <div class="row">
+                    
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class='fa fa-exclamation-circle text-danger'></i> Oops</h5>
+                                    <p class="card-text">No concerts were found for '${capitalize(artist)}'</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                  
+        `
+      )
+
+      }
+    }
+
+    function numberOfSearchesFound(ticketMasterArtist, seatGeekArtist){
+      numberOfSearchResults = ticketMasterArtist.length + seatGeekArtist.length;
+      if(numberOfSearchResults)
+      searchInfo.empty();
+      searchInfo.append(
+        `
+          <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+              <b>${numberOfSearchResults} results found</b>
           </div>
-          `);
-        }
-      }
-      function loadArtist(artist) {
-        let tableRef = document.getElementById("tableOutput");
-        console.log(artist.length);
-        artistArray = artist.map(function (event) {
-          let newRow = tableRef.insertRow();
-          let dateCell = newRow.insertCell(0);
-          let venueCell = newRow.insertCell(1);
-          let urlCell = newRow.insertCell(2);
+      `)
+ 
+    }
+    //capitalizes first letter of given string
+    function capitalize(str){
+      if(str !== "" && str !== null){
+        return str.charAt(0).toUpperCase() + str.slice(1);
 
-          let combinedDateTime = `${event.date}T${event.time}`
-          let formattedDateTime = moment(combinedDateTime).format('dddd MMMM Do YYYY, h:mma')
-          dateCell.innerHTML = formattedDateTime;
-          venueCell.innerHTML = `${event.venue}`;
-          urlCell.innerHTML = `
-                            <a
-                              class="btn btn-danger"
-                              href="${event.url}"
-                            >
-                              Seatgeek from $${event.price_min}
-                            </a>`;
-        });
-        return artistArray.join("");
       }
+    }
+
+    function priceAvailablity(str){
+      if(str === null){
+        return "No purchase price available";
+      }else{
+        return "$" + str;
+      }
+    }
     });
-
+      
     //bootstrap validation
 
     (function () {
@@ -326,6 +415,17 @@
       );
     });
 
+    //filter
+    var $btns = $('.filter').click(function() {
+    if (this.id == 'all') {
+      $('#output > div').fadeIn(450);
+    } else {
+      var $el = $('.' + this.id).fadeIn(450);
+      $('#output > div').not($el).hide();
+    }
+    $btns.removeClass('active');
+    $(this).addClass('active');
+  })
 
   </script>
 </html>
