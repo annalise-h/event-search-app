@@ -1,0 +1,11 @@
+.container.hidden {
+  visibility: hidden;
+}
+.fas.fa-sort-up.down {
+  transition: transform 0.2s ease;
+  transform: rotate(180deg);
+}
+.fas.fa-sort-up {
+  transition: transform 0.2s ease;
+  transform: rotate(0);
+}
