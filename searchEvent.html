@@ -155,9 +155,10 @@
         </div>
       </div>
         <div class="row justify-content-end" id="filters">
-          <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
-                <button class="btn btn-light btn-md filter" id="ticketmaster"><i class="fa fa-filter"></i> TicketMaster</button>
-            <button class="btn btn-light  btn-md filter" id="seatgeek"><i class="fa fa-filter"></i> SeatGeek</button>
+          <div class="col-6 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+              <button class="btn btn-light btn-md filter" id="all"><i class="fa fa-filter"></i> Show All</button>
+              <button class="btn btn-light btn-md filter" id="ticketmaster"><i class="fa fa-filter"></i> TicketMaster</button>
+              <button class="btn btn-light  btn-md filter" id="seatgeek"><i class="fa fa-filter"></i> SeatGeek</button>
           </div>
         </div>
     </div>
@@ -419,9 +420,11 @@
     var $btns = $('.filter').click(function() {
     if (this.id == 'all') {
       $('#output > div').fadeIn(450);
+
     } else {
       var $el = $('.' + this.id).fadeIn(450);
       $('#output > div').not($el).hide();
+      $("#searchInfo").hide();
     }
     $btns.removeClass('active');
     $(this).addClass('active');
