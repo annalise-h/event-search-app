@@ -329,7 +329,6 @@ function formatEvents(events) {
     }
   })
 
-  console.log(formattedEventData)
   return formattedEventData
 }
 
