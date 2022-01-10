@@ -253,8 +253,8 @@ async function seatgeekSearch(artistInput, state, city, dateStart, dateEnd) {
         date: dateFull[0], //extract date of event from event list
         time: dateFull[1],
         prices: {
-          seatgeekPriceMax: data.events[index].stats.lowest_price,
-          seatgeekPriceMin: data.events[index].stats.highest_price
+          seatgeekPriceMin: data.events[index].stats.lowest_price,
+          seatgeekPriceMax: data.events[index].stats.highest_price
         },
         image: data.events[index].performers[0].image, //extract image of artistfrom event list
       };
