@@ -4,44 +4,49 @@
 
 $(document).ready(() => {
   $("#search").submit(async function (e) {
-    submitSearch(e)
-  })
-})
+    submitSearch(e);
+  });
+});
 
 async function submitSearch(e) {
   e.preventDefault();
 
-  const output = $("#output")
-  output.empty()
+  const output = $("#output");
+  output.empty();
 
-  let artistInput = $("#keywordInput").val()
-  if (!artistInput) return
+  let artistInput = $("#keywordInput").val();
+  if (!artistInput) return;
 
-  //input values 
+  //input values
   let city = $("#cityInput").val();
   let state = $("#stateInput").val();
   let dateInput = $("#dateInput").val();
   let startAndEndDate = dateInput.split(" - ");
 
-  let startDate
-  let endDate
+  let startDate;
+  let endDate;
 
   if (dateInput.length == 0) {
     startDate = "";
     endDate = "";
   } else {
-    startDate = new Date(startAndEndDate[0]).toISOString().split('T')[0]
-    endDate = new Date(startAndEndDate[1]).toISOString().split('T')[0]
+    startDate = new Date(startAndEndDate[0]).toISOString().split("T")[0];
+    endDate = new Date(startAndEndDate[1]).toISOString().split("T")[0];
   }
 
-  const allEvents = await getAndMergeEvents(city, state, artistInput, startDate, endDate)
-
+  const allEvents = await getAndMergeEvents(
+    city,
+    state,
+    artistInput,
+    startDate,
+    endDate
+  );
 
   if (allEvents.length < 1) {
-    noSearchesFound(artistInput)
+    noSearchesFound(artistInput);
   } else {
-    loadEventCards(allEvents)
-    numberOfSearchesFound(allEvents)
+    loadEventCards(allEvents);
+    numberOfSearchesFound(allEvents);
   }
 }
 
@@ -55,7 +60,7 @@ function noSearchesFound(artist) {
   output.append(
     `
     <div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
-      <div class="card mb-3">
+      <div class="card bg-light mb-3">
         <div class="row">
           <div class="col-md-8">
             <div class="card-body">
@@ -71,26 +76,33 @@ function noSearchesFound(artist) {
       </div>
     </div>
     `
-  )
+  );
 }
 
 //capitalizes first letter of given string
-function capitalize(str){
-  if(str !== "" && str !== null){
+function capitalize(str) {
+  if (str !== "" && str !== null) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 }
 
-function loadEventCards(events){
-  const output = $("#output")
+function loadEventCards(events) {
+  const output = $("#output");
 
-  events.map(function(event){
-    let combinedDateTime = `${event.date}T${event.time}`
-    let formattedDateTime = moment(combinedDateTime).format('dddd MMMM Do YYYY, h:mma')
+  events.map(function (event) {
+    let combinedPrice =
+      Number(event.prices.ticketmasterPriceMin) +
+      Number(event.prices.seatgeekPriceMin);
+    let combinedDateTime = `${event.date}T${event.time}`;
+    let formattedDateTime = moment(combinedDateTime).format(
+      "dddd MMMM Do YYYY, h:mma"
+    );
     output.append(
       `
-        <div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 seatgeek" align="center">
-          <div class="card mb-3">
+        <div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 " align="center">
+          <div class="card bg-light mb-3" data-date="${
+            event.date
+          } data-price="${combinedPrice}">
             <div class="row">
               <div class="col-md-6">
                 <img src="${event.image}" width="100%" height="280px" alt="...">
@@ -98,7 +110,9 @@ function loadEventCards(events){
               <div class="col-md-6 d-flex align-items-center">
                 <div class="card-body">
                   <h5 class="card-title">${event.title.toUpperCase()}</h5>
-                  <p class="card-text"><i class='fa fa-map-marker'></i>  ${event.venue}</p>
+                  <p class="card-text"><i class='fa fa-map-marker'></i>  ${
+                    event.venue
+                  }</p>
                   <p class="card-text"><i class='fa fa-calendar'></i> ${formattedDateTime}</p>
                   ${appendPriceButtons(event)}
                 </div>
@@ -107,55 +121,67 @@ function loadEventCards(events){
           </div>
       </div>
     `
-    )
-  })
+    );
+  });
 }
 
 function appendPriceButtons(event) {
-  let priceStr = ''
+  let priceStr = "";
 
   if (event.urls.hasOwnProperty("ticketmasterUrl")) {
     priceStr += `<p class="card-text" style="display:inline">From Ticketmaster</p>
         <a class="btn btn-primary mb-2"
         href="${event.urls.ticketmasterUrl}" 
         target="_blank">${priceAvailablity(event.prices.ticketmasterPriceMin)}
-        </a>` 
-    } 
+        </a>`;
+  }
   if (event.urls.hasOwnProperty("seatgeekUrl")) {
-    if (event.urls.hasOwnProperty("ticketmasterUrl")) priceStr += '</br>'
+    if (event.urls.hasOwnProperty("ticketmasterUrl")) priceStr += "</br>";
     priceStr += `<p class="card-text" style="display:inline">From Seatgeek</p>
-      <a class="btn btn-primary mb-2" 
+      <a class="btn btn-danger mb-2" 
       href="${event.urls.seatgeekUrl}" 
       target="_blank">${priceAvailablity(event.prices.seatgeekPriceMin)}
-    </a>`
+    </a>`;
   }
 
-  return priceStr
+  return priceStr;
 }
 
-function numberOfSearchesFound(events){
-  const searchInfo = $("#searchInfo")
+function numberOfSearchesFound(events) {
+  const searchInfo = $("#searchInfo");
 
-  numberOfSearchResults = events.length
+  numberOfSearchResults = events.length;
   searchInfo.empty();
   searchInfo.append(
-  `
+    `
     <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
         <b>${numberOfSearchResults} results found</b>
     </div>
-  `)
+    <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"><div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+      Sort by:
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+      <li><button class="dropdown-item" type="button">Price: Low to High</button></li>
+      <li><button class="dropdown-item" type="button">Price: High to Low</button></li>
+      <li><button class="dropdown-item" type="button" onclick="sortCardsAZ()">Date (Newest)</button></li>
+      <li><button class="dropdown-item" type="button" onclick="sortCardsZA()">Date (Oldest)</button></li>
+    </ul>
+  </div>
+    </div>
+  `
+  );
 }
 
-
-function priceAvailablity(price){
+function priceAvailablity(price) {
   if (price === null) {
-    return "No purchase price available";
+    return "Price Not Available";
   } else {
-    if (Number(price) % 1 !== 0) price += 0
+    if (Number(price) % 1 !== 0) price += 0;
     return "$" + price;
   }
-};
-  
+}
+
 //bootstrap validation
 
 (function () {
@@ -223,7 +249,7 @@ async function seatgeekSearch(artistInput, state, city, dateStart, dateEnd) {
   const typeOfEvent = "concert";
   const urlifySearch = artistInput.replace(" ", "-");
   //if any of the inputs from the form are blank, remove them from query. Artist is only required field.
-  
+
   //the select statement returns null if no value is entered
   let stateSearch = state == null ? "" : `&venue.state=${state}`;
   let citySearch = city == "" ? "" : `&venue.city=${city}`;
@@ -234,37 +260,31 @@ async function seatgeekSearch(artistInput, state, city, dateStart, dateEnd) {
   //returns list of 30 events
   const response = await fetch(
     //this only works if city is required
-     `https://api.seatgeek.com/2/events?per_page=30&performers[primary].slug=${urlifySearch}&taxonomies.name=${typeOfEvent}&${stateSearch}${citySearch}${startDateSearch}${endDateSearch}&${key}`
+    `https://api.seatgeek.com/2/events?per_page=30&performers[primary].slug=${urlifySearch}&taxonomies.name=${typeOfEvent}&${stateSearch}${citySearch}${startDateSearch}${endDateSearch}&${key}`
   );
   const data = await response.json();
   let events = data.events;
   // get output for requested information
-  let output = events.map(
-    (
-      { title, venue, url, datetime_local },
-      index
-    ) => {
-      let dateFull = datetime_local.split("T");
-      return {
-        artist: data.events[index].performers[0].name, //extract image from event list
-        title: title.toLowerCase(), //extract titles from event list
-        venue: `${venue.name}, ${venue.display_location}`, //extract venue & venue city from event list
-        urls: { seatgeekUrl: url }, //extract seatgeek link from event list
-        date: dateFull[0], //extract date of event from event list
-        time: dateFull[1],
-        prices: {
-          seatgeekPriceMin: data.events[index].stats.lowest_price,
-          seatgeekPriceMax: data.events[index].stats.highest_price
-        },
-        image: data.events[index].performers[0].image, //extract image of artistfrom event list
-      };
-    }
-  );
+  let output = events.map(({ title, venue, url, datetime_local }, index) => {
+    let dateFull = datetime_local.split("T");
+    return {
+      artist: data.events[index].performers[0].name, //extract image from event list
+      title: title.toLowerCase(), //extract titles from event list
+      venue: `${venue.name}, ${venue.display_location}`, //extract venue & venue city from event list
+      urls: { seatgeekUrl: url }, //extract seatgeek link from event list
+      date: dateFull[0], //extract date of event from event list
+      time: dateFull[1],
+      prices: {
+        seatgeekPriceMin: data.events[index].stats.lowest_price,
+        seatgeekPriceMax: data.events[index].stats.highest_price,
+      },
+      image: data.events[index].performers[0].image, //extract image of artistfrom event list
+    };
+  });
   //sort return based on title of event (a-z)
   let sortedEvents = output.sort((a, b) => (a.title > b.title ? 1 : -1));
   return sortedEvents;
 }
-
 
 /*
   Ticketmaster data fetch & manipulation
@@ -274,37 +294,43 @@ async function seatgeekSearch(artistInput, state, city, dateStart, dateEnd) {
 whenever we call the api, we are always searching within the US
 and narrowing our search by music events only
 */
-apiKey="nWu4c2uaSG2JYUTkGTzuHTAwSuZR1GDX"
-const eventSearchUrl = `https://app.ticketmaster.com/discovery/v2/events?classificationName=music&countryCode=US&sort=name,asc&apikey=${apiKey}`
-const attractionSearchUrl = `https://app.ticketmaster.com/discovery/v2/attractions?classificationName=music&countryCode=US&apikey=${apiKey}`
+apiKey = "nWu4c2uaSG2JYUTkGTzuHTAwSuZR1GDX";
+const eventSearchUrl = `https://app.ticketmaster.com/discovery/v2/events?classificationName=music&countryCode=US&sort=name,asc&apikey=${apiKey}`;
+const attractionSearchUrl = `https://app.ticketmaster.com/discovery/v2/attractions?classificationName=music&countryCode=US&apikey=${apiKey}`;
 
-async function searchTicketmasterEvents(cityName, stateCode, artist, startDate, endDate) {
-  let searchUrl = eventSearchUrl
+async function searchTicketmasterEvents(
+  cityName,
+  stateCode,
+  artist,
+  startDate,
+  endDate
+) {
+  let searchUrl = eventSearchUrl;
 
   // if no events are found for the artist we want to return an empty array
-  let attractionIds
-  attractionIds = await getAttractionIds(artist)
+  let attractionIds;
+  attractionIds = await getAttractionIds(artist);
   if (attractionIds) {
-    searchUrl += `&attractionId=${attractionIds}`
+    searchUrl += `&attractionId=${attractionIds}`;
   } else {
-    return []
+    return [];
   }
 
   // append city to the search url if it exists
-  if (cityName) searchUrl += `&city=${encodeURIComponent(cityName)}`
+  if (cityName) searchUrl += `&city=${encodeURIComponent(cityName)}`;
 
   //the select statement returns null if no value is entered, so a check for null is needed
-  if (stateCode) searchUrl += `&stateCode=${stateCode}`
+  if (stateCode) searchUrl += `&stateCode=${stateCode}`;
 
-  // start date and end date are both optional so only execute logic if either exists 
+  // start date and end date are both optional so only execute logic if either exists
   if (startDate || endDate) {
     // if one of these is null, we want to use * to search by all dates before or after
-    !startDate ? startDate = '*' : startDate += 'T00:00:00'
-    !endDate ? endDate = '*' : endDate += 'T00:00:00'
+    !startDate ? (startDate = "*") : (startDate += "T00:00:00");
+    !endDate ? (endDate = "*") : (endDate += "T00:00:00");
   }
-  let eventSearchResponse = await (await fetch(searchUrl)).json()
+  let eventSearchResponse = await (await fetch(searchUrl)).json();
 
-  return formatEvents(eventSearchResponse._embedded.events)
+  return formatEvents(eventSearchResponse._embedded.events);
 }
 
 /* 
@@ -312,77 +338,129 @@ return event data with the following info: name, price min and max, ticket link,
 images, local date, venue name, venue location 
 */
 function formatEvents(events) {
-  const formattedEventData = events.map( ({name, priceRanges, url, images, dates, _embedded}) => {
-    return { 
-      title: name, 
-      // some events don't have a price range, so then we return a default value
-      prices: {
-        ticketmasterPriceMin: priceRanges ? priceRanges[0].min.toString() : null,
-        ticketmasterPriceMax: priceRanges ? priceRanges[0].max.toString() : null
-      },
-      urls: { ticketmasterUrl: url },
-      image: images[0].url,
-      date: dates.start.localDate,
-      time: dates.start.localTime,
-      venue: 
-        `${_embedded.venues[0].name}, ${_embedded.venues[0].city.name}, ${_embedded.venues[0].state.stateCode}`
+  const formattedEventData = events.map(
+    ({ name, priceRanges, url, images, dates, _embedded }) => {
+      return {
+        title: name,
+        // some events don't have a price range, so then we return a default value
+        prices: {
+          ticketmasterPriceMin: priceRanges
+            ? priceRanges[0].min.toString()
+            : null,
+          ticketmasterPriceMax: priceRanges
+            ? priceRanges[0].max.toString()
+            : null,
+        },
+        urls: { ticketmasterUrl: url },
+        image: images[0].url,
+        date: dates.start.localDate,
+        time: dates.start.localTime,
+        venue: `${_embedded.venues[0].name}, ${_embedded.venues[0].city.name}, ${_embedded.venues[0].state.stateCode}`,
+      };
     }
-  })
+  );
 
-  console.log(formattedEventData)
-  return formattedEventData
+  console.log(formattedEventData);
+  return formattedEventData;
 }
 
 async function getAttractionIds(artist) {
-  let attractionIdsResponse = await( await fetch(`${attractionSearchUrl}&keyword=${encodeURIComponent(artist)}`)).json()
+  let attractionIdsResponse = await (
+    await fetch(`${attractionSearchUrl}&keyword=${encodeURIComponent(artist)}`)
+  ).json();
   if (attractionIdsResponse.page.totalElements === 0) {
-    return false
+    return false;
   }
-  let attractions = attractionIdsResponse._embedded.attractions
-  return attractions.map(attraction => attraction.id).join(',')
+  let attractions = attractionIdsResponse._embedded.attractions;
+  return attractions.map((attraction) => attraction.id).join(",");
 }
 
 /* 
   Merge the data returned from Seatgeek + Ticketmaster into a single events array
-*/ 
+*/
 
 async function getAndMergeEvents(cityName, state, artist, startDate, endDate) {
-  // start by getting both ticketmaster and seatgeek event search responses 
-  const ticketmasterEvents = await searchTicketmasterEvents(cityName, state, artist, startDate, endDate)
-  const seatgeekEvents = await seatgeekSearch(artist, state, cityName, startDate, endDate)
+  // start by getting both ticketmaster and seatgeek event search responses
+  const ticketmasterEvents = await searchTicketmasterEvents(
+    cityName,
+    state,
+    artist,
+    startDate,
+    endDate
+  );
+  const seatgeekEvents = await seatgeekSearch(
+    artist,
+    state,
+    cityName,
+    startDate,
+    endDate
+  );
 
-  let combinedEvents = ticketmasterEvents.map(ticketmasterEvent => {
-    let matchedSeatGeekEvent = checkForSeatGeekMatch(ticketmasterEvent, seatgeekEvents)
+  let combinedEvents = ticketmasterEvents.map((ticketmasterEvent) => {
+    let matchedSeatGeekEvent = checkForSeatGeekMatch(
+      ticketmasterEvent,
+      seatgeekEvents
+    );
     if (matchedSeatGeekEvent) {
-      seatgeekEvents.splice(seatgeekEvents.indexOf(matchedSeatGeekEvent), 1)
+      seatgeekEvents.splice(seatgeekEvents.indexOf(matchedSeatGeekEvent), 1);
       let combinedEvent = {
-        ...ticketmasterEvent
-      }
+        ...ticketmasterEvent,
+      };
       combinedEvent.urls = {
         ticketmasterUrl: ticketmasterEvent.urls.ticketmasterUrl,
-        seatgeekUrl: matchedSeatGeekEvent.urls.seatgeekUrl
-      }
-      combinedEvent.prices = {  
+        seatgeekUrl: matchedSeatGeekEvent.urls.seatgeekUrl,
+      };
+      combinedEvent.prices = {
         ticketmasterPriceMin: ticketmasterEvent.prices.ticketmasterPriceMin,
-        seatgeekPriceMin: matchedSeatGeekEvent.prices.seatgeekPriceMin
-      }
-      return combinedEvent 
+        seatgeekPriceMin: matchedSeatGeekEvent.prices.seatgeekPriceMin,
+      };
+      return combinedEvent;
     } else {
-      return ticketmasterEvent
+      return ticketmasterEvent;
     }
-  })
+  });
 
-  combinedEvents = combinedEvents.concat(seatgeekEvents)
+  combinedEvents = combinedEvents.concat(seatgeekEvents);
 
-  return combinedEvents
+  return combinedEvents;
 }
-
 function checkForSeatGeekMatch(ticketmasterEvent, seatgeekEvents) {
   const matchedEvent = seatgeekEvents.filter((seatgeekEvent) => {
-    if (seatgeekEvent.date == ticketmasterEvent.date && seatgeekEvent.time == ticketmasterEvent.time) {
-      return seatgeekEvent
+    if (
+      seatgeekEvent.date == ticketmasterEvent.date &&
+      seatgeekEvent.time == ticketmasterEvent.time
+    ) {
+      return seatgeekEvent;
     }
-  })
+  });
 
-  return matchedEvent[0]
+  return matchedEvent[0];
+}
+function sortCardsAZ() {
+  let parent = document.querySelector("#output");
+  let cards = document.querySelectorAll(
+    ".col-8.col-sm-8.col-md-8.col-lg-8.col-xl-8"
+  );
+  let cardArr = [].slice.call(cards).sort(function (a, b) {
+    return a.firstElementChild.dataset.date > b.firstElementChild.dataset.date
+      ? 1
+      : -1;
+  });
+  cardArr.forEach(function (card) {
+    parent.appendChild(card);
+  });
+}
+function sortCardsZA() {
+  let parent = document.querySelector("#output");
+  let cards = document.querySelectorAll(
+    ".col-8.col-sm-8.col-md-8.col-lg-8.col-xl-8"
+  );
+  let cardArr = [].slice.call(cards).sort(function (a, b) {
+    return a.firstElementChild.dataset.date > b.firstElementChild.dataset.date
+      ? -1
+      : 1;
+  });
+  cardArr.forEach(function (card) {
+    parent.appendChild(card);
+  });
 }
