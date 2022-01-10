@@ -11,6 +11,9 @@ $(document).ready(() => {
 async function submitSearch(e) {
   e.preventDefault();
 
+  const output = $("#output")
+  output.empty()
+
   let artistInput = $("#keywordInput").val()
   if (!artistInput) return
 
@@ -33,11 +36,11 @@ async function submitSearch(e) {
 
   const allEvents = await getAndMergeEvents(city, state, artistInput, startDate, endDate)
 
+
   if (allEvents.length < 1) {
     noSearchesFound(artistInput)
   } else {
     loadEventCards(allEvents)
-    appendPriceButtons(allEvents)
     numberOfSearchesFound(allEvents)
   }
 }
@@ -109,22 +112,21 @@ function loadEventCards(events){
 }
 
 function appendPriceButtons(event) {
-  console.log(event)
   let priceStr = ''
 
-  if (event.urls.ticketmasterUrl) {
+  if (event.urls.hasOwnProperty("ticketmasterUrl")) {
     priceStr += `<p class="card-text" style="display:inline">From Ticketmaster</p>
         <a class="btn btn-primary mb-2"
         href="${event.urls.ticketmasterUrl}" 
-        target="_blank">${priceAvailablity(event.price_min)}
+        target="_blank">${priceAvailablity(event.prices.ticketmasterPriceMin)}
         </a>` 
     } 
-  if (event.urls.seatgeekUrl) {
-    if (event.urls.seatgeekUrl) priceStr += '</br>'
+  if (event.urls.hasOwnProperty("seatgeekUrl")) {
+    if (event.urls.hasOwnProperty("ticketmasterUrl")) priceStr += '</br>'
     priceStr += `<p class="card-text" style="display:inline">From Seatgeek</p>
       <a class="btn btn-primary mb-2" 
       href="${event.urls.seatgeekUrl}" 
-      target="_blank">${priceAvailablity(event.price_min)}
+      target="_blank">${priceAvailablity(event.prices.seatgeekPriceMin)}
     </a>`
   }
 
@@ -145,12 +147,12 @@ function numberOfSearchesFound(events){
 }
 
 
-function priceAvailablity(str){
-  if (str === null) {
+function priceAvailablity(price){
+  if (price === null) {
     return "No purchase price available";
   } else {
-    if (Number(str) % 1 !== 0) str += 0
-    return "$" + str;
+    if (Number(price) % 1 !== 0) price += 0
+    return "$" + price;
   }
 };
   
@@ -250,8 +252,10 @@ async function seatgeekSearch(artistInput, state, city, dateStart, dateEnd) {
         urls: { seatgeekUrl: url }, //extract seatgeek link from event list
         date: dateFull[0], //extract date of event from event list
         time: dateFull[1],
-        price_min: data.events[index].stats.lowest_price, //extract low price of event from event list
-        price_max: data.events[index].stats.highest_price, //extract high price of event from event list
+        prices: {
+          seatgeekPriceMax: data.events[index].stats.lowest_price,
+          seatgeekPriceMin: data.events[index].stats.highest_price
+        },
         image: data.events[index].performers[0].image, //extract image of artistfrom event list
       };
     }
@@ -312,8 +316,10 @@ function formatEvents(events) {
     return { 
       title: name, 
       // some events don't have a price range, so then we return a default value
-      price_min: priceRanges ? priceRanges[0].min.toString() : "N/A",
-      price_max: priceRanges ? priceRanges[0].max.toString() : "N/A",
+      prices: {
+        ticketmasterPriceMin: priceRanges ? priceRanges[0].min.toString() : null,
+        ticketmasterPriceMax: priceRanges ? priceRanges[0].max.toString() : null
+      },
       urls: { ticketmasterUrl: url },
       image: images[0].url,
       date: dates.start.localDate,
@@ -323,6 +329,7 @@ function formatEvents(events) {
     }
   })
 
+  console.log(formattedEventData)
   return formattedEventData
 }
 
@@ -354,6 +361,10 @@ async function getAndMergeEvents(cityName, state, artist, startDate, endDate) {
       combinedEvent.urls = {
         ticketmasterUrl: ticketmasterEvent.urls.ticketmasterUrl,
         seatgeekUrl: matchedSeatGeekEvent.urls.seatgeekUrl
+      }
+      combinedEvent.prices = {  
+        ticketmasterPriceMin: ticketmasterEvent.prices.ticketmasterPriceMin,
+        seatgeekPriceMin: matchedSeatGeekEvent.prices.seatgeekPriceMin
       }
       return combinedEvent 
     } else {
