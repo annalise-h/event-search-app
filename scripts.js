@@ -360,8 +360,8 @@ function formatEvents(events) {
     }
   );
 
-  console.log(formattedEventData);
-  return formattedEventData;
+
+  return formattedEventData
 }
 
 async function getAttractionIds(artist) {
