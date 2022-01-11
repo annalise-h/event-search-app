@@ -345,7 +345,11 @@ async function searchTicketmasterEvents(
   }
   let eventSearchResponse = await (await fetch(searchUrl)).json();
 
-  return formatEvents(eventSearchResponse._embedded.events);
+  if (eventSearchResponse.page.totalElements > 0) {
+    return formatEvents(eventSearchResponse._embedded.events)
+  } else {
+    return []
+  }
 }
 
 /* 
@@ -458,10 +462,10 @@ function sortCardsAZ() {
   let cardArr = [].slice.call(cards).sort(function (a, b) {
     return a.firstElementChild.dataset.date > b.firstElementChild.dataset.date
       ? 1
-      : -1;
+      : -1
   });
   cardArr.forEach(function (card) {
-    parent.appendChild(card);
+    parent.appendChild(card)
   });
 }
 function sortCardsZA() {
