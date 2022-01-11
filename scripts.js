@@ -177,8 +177,8 @@ function numberOfSearchesFound(events) {
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
       <li><button class="dropdown-item" type="button"onclick="sortPriceLowHigh()">Price: Low to High</button></li>
       <li><button class="dropdown-item" type="button"onclick="sortPriceHighLow()">Price: High to Low</button></li>
-      <li><button class="dropdown-item" type="button" onclick="sortCardsAZ()">Date (Newest)</button></li>
-      <li><button class="dropdown-item" type="button" onclick="sortCardsZA()">Date (Oldest)</button></li>
+      <li><button class="dropdown-item" type="button" onclick="sortCardsAZ()">Earliest to Latest</button></li>
+      <li><button class="dropdown-item" type="button" onclick="sortCardsZA()">Latest to Earliest</button></li>
     </ul>
   </div>
     </div>
@@ -346,9 +346,9 @@ async function searchTicketmasterEvents(
   let eventSearchResponse = await (await fetch(searchUrl)).json();
 
   if (eventSearchResponse.page.totalElements > 0) {
-    return formatEvents(eventSearchResponse._embedded.events)
+    return formatEvents(eventSearchResponse._embedded.events);
   } else {
-    return []
+    return [];
   }
 }
 
@@ -463,10 +463,10 @@ function sortCardsAZ() {
   let cardArr = [].slice.call(cards).sort(function (a, b) {
     return a.firstElementChild.dataset.date > b.firstElementChild.dataset.date
       ? 1
-      : -1
+      : -1;
   });
   cardArr.forEach(function (card) {
-    parent.appendChild(card)
+    parent.appendChild(card);
   });
 }
 
