@@ -345,11 +345,7 @@ async function searchTicketmasterEvents(
   }
   let eventSearchResponse = await (await fetch(searchUrl)).json();
 
-  if (eventSearchResponse.page.totalElements > 0) {
-    return formatEvents(eventSearchResponse._embedded.events)
-  } else {
-    return []
-  }
+  return formatEvents(eventSearchResponse._embedded.events);
 }
 
 /* 
@@ -454,7 +450,6 @@ function checkForSeatGeekMatch(ticketmasterEvent, seatgeekEvents) {
 
   return matchedEvent[0];
 }
-
 function sortCardsAZ() {
   let parent = document.querySelector("#output");
   let cards = document.querySelectorAll(
@@ -463,13 +458,12 @@ function sortCardsAZ() {
   let cardArr = [].slice.call(cards).sort(function (a, b) {
     return a.firstElementChild.dataset.date > b.firstElementChild.dataset.date
       ? 1
-      : -1
+      : -1;
   });
   cardArr.forEach(function (card) {
-    parent.appendChild(card)
+    parent.appendChild(card);
   });
 }
-
 function sortCardsZA() {
   let parent = document.querySelector("#output");
   let cards = document.querySelectorAll(
@@ -484,7 +478,6 @@ function sortCardsZA() {
     parent.appendChild(card);
   });
 }
-
 function sortPriceHighLow() {
   let parent = document.querySelector("#output");
   let cards = document.querySelectorAll(
@@ -500,7 +493,6 @@ function sortPriceHighLow() {
     parent.appendChild(card);
   });
 }
-
 function sortPriceLowHigh() {
   let parent = document.querySelector("#output");
   let cards = document.querySelectorAll(
