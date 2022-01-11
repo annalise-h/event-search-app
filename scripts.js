@@ -273,7 +273,9 @@ async function seatgeekSearch(artistInput, state, city, dateStart, dateEnd) {
   //returns list of 30 events
   const response = await fetch(
     //this only works if city is required
-    `https://api.seatgeek.com/2/events?per_page=30&performers[primary].slug=${urlifySearch}&taxonomies.name=${typeOfEvent}&${stateSearch}${citySearch}${startDateSearch}${endDateSearch}&${key}`
+    `https://api.seatgeek.com/2/events?per_page=30&performers[primary].slug=${encodeURIComponent(
+      urlifySearch
+    )}&taxonomies.name=${typeOfEvent}&${stateSearch}${citySearch}${startDateSearch}${endDateSearch}&${key}`
   );
   const data = await response.json();
   let events = data.events;
