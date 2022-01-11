@@ -90,9 +90,22 @@ function loadEventCards(events) {
   const output = $("#output");
 
   events.map(function (event) {
-    let combinedPrice =
-      Number(event.prices.ticketmasterPriceMin) +
-      Number(event.prices.seatgeekPriceMin);
+    let ticketmasterLow =
+      event.prices.ticketmasterPriceMin == null
+        ? event.prices.seatgeekPriceMin
+        : event.prices.ticketmasterPriceMin;
+    let seatgeekLow =
+      event.prices.seatgeekPriceMin == null
+        ? event.prices.ticketmasterPriceMin
+        : event.prices.seatgeekPriceMin;
+    let lowPrice =
+      Number(ticketmasterLow) < Number(seatgeekLow)
+        ? Number(ticketmasterLow)
+        : Number(seatgeekLow);
+    let highPrice =
+      Number(ticketmasterLow) < Number(seatgeekLow)
+        ? Number(seatgeekLow)
+        : Number(ticketmasterLow);
     let combinedDateTime = `${event.date}T${event.time}`;
     let formattedDateTime = moment(combinedDateTime).format(
       "dddd MMMM Do YYYY, h:mma"
@@ -102,7 +115,7 @@ function loadEventCards(events) {
         <div class="col-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 " align="center">
           <div class="card bg-light mb-3" data-date="${
             event.date
-          } data-price="${combinedPrice}">
+          }" data-pricel="${lowPrice}"data-priceh="${highPrice}">
             <div class="row">
               <div class="col-md-6">
                 <img src="${event.image}" width="100%" height="280px" alt="...">
@@ -154,16 +167,16 @@ function numberOfSearchesFound(events) {
   searchInfo.empty();
   searchInfo.append(
     `
-    <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4">
+    <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"id=resultsFound>
         <b>${numberOfSearchResults} results found</b>
     </div>
-    <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"><div class="dropdown">
+    <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4"><div class="dropdown" >
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
       Sort by:
     </button>
     <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-      <li><button class="dropdown-item" type="button">Price: Low to High</button></li>
-      <li><button class="dropdown-item" type="button">Price: High to Low</button></li>
+      <li><button class="dropdown-item" type="button"onclick="sortPriceLowHigh()">Price: Low to High</button></li>
+      <li><button class="dropdown-item" type="button"onclick="sortPriceHighLow()">Price: High to Low</button></li>
       <li><button class="dropdown-item" type="button" onclick="sortCardsAZ()">Date (Newest)</button></li>
       <li><button class="dropdown-item" type="button" onclick="sortCardsZA()">Date (Oldest)</button></li>
     </ul>
@@ -360,7 +373,6 @@ function formatEvents(events) {
     }
   );
 
-  console.log(formattedEventData);
   return formattedEventData;
 }
 
@@ -459,6 +471,36 @@ function sortCardsZA() {
     return a.firstElementChild.dataset.date > b.firstElementChild.dataset.date
       ? -1
       : 1;
+  });
+  cardArr.forEach(function (card) {
+    parent.appendChild(card);
+  });
+}
+function sortPriceHighLow() {
+  let parent = document.querySelector("#output");
+  let cards = document.querySelectorAll(
+    ".col-8.col-sm-8.col-md-8.col-lg-8.col-xl-8"
+  );
+  let cardArr = [].slice.call(cards).sort(function (a, b) {
+    return parseInt(a.firstElementChild.dataset.priceh) <
+      parseInt(b.firstElementChild.dataset.priceh)
+      ? 1
+      : -1;
+  });
+  cardArr.forEach(function (card) {
+    parent.appendChild(card);
+  });
+}
+function sortPriceLowHigh() {
+  let parent = document.querySelector("#output");
+  let cards = document.querySelectorAll(
+    ".col-8.col-sm-8.col-md-8.col-lg-8.col-xl-8"
+  );
+  let cardArr = [].slice.call(cards).sort(function (a, b) {
+    return parseInt(a.firstElementChild.dataset.pricel) >
+      parseInt(b.firstElementChild.dataset.pricel)
+      ? 1
+      : -1;
   });
   cardArr.forEach(function (card) {
     parent.appendChild(card);
